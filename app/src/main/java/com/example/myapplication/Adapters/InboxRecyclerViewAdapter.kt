@@ -2,11 +2,13 @@ package com.example.myapplication.Adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.ChatActivity
 import com.example.myapplication.Constants.ConstantValues
@@ -51,8 +53,10 @@ class InboxRecyclerViewAdapter: RecyclerView.Adapter<InboxViewHolder> {
         if(currentInboxItem.getInboxChatUnreadCount()>0) {
             holder.inboxUnreadCountTv.text = currentInboxItem.getInboxChatUnreadCount().toString()
             holder.inboxUnreadCountTv.visibility = View.VISIBLE
+            holder.inboxLastTextTv.typeface = ResourcesCompat.getFont(context, R.font.aleo_bold)
         } else {
             holder.inboxUnreadCountTv.visibility = View.INVISIBLE
+            holder.inboxLastTextTv.typeface = ResourcesCompat.getFont(context, R.font.aleo_light)
         }
 
 
