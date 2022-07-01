@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.myapplication.Constants.ConstantValues
+import com.example.myapplication.Encryption.Encryption
 import com.example.myapplication.ModelClasses.User
 import com.example.myapplication.Utility.ButtonState
 import com.example.myapplication.Utility.NetworkStateChangeListener
@@ -89,19 +90,6 @@ class SignUp : AppCompatActivity() {
         return passwordEt.text.toString() == confirmPasswordEt.text.toString()
     }
 
-    private fun aesEncription(text: String) : String {
-        var encryptedText: String ="-1"
-        if(text != "-1") {
-            try {
-                encryptedText = AESCrypt.encrypt(ConstantValues.AES_ENCRIPTION_KEY_FOR_USER_PASSWORD, text)
-            } catch(e: GeneralSecurityException) {
-                Log.v(ConstantValues.LOGCAT_TEST, "AES Encryption failed")
-                e.printStackTrace()
-            }
-        }
-        return encryptedText
-    }
-
     private fun registerUserInFirebase() {
         firebaseAuth.createUserWithEmailAndPassword(emailEt.text.toString().trim(), passwordEt.text.toString().trim()).addOnCompleteListener { task->
             signUpProgressDialogue.dismiss()
@@ -112,7 +100,7 @@ class SignUp : AppCompatActivity() {
                     if(task.isSuccessful) {
                         Toast.makeText(applicationContext, "user registered successfully, please verify your email", Toast.LENGTH_SHORT).show()
                         val createdUserFirebaseId: String = firebaseAuth.currentUser?.uid ?: "-1"
-                        val AesEncryptedPassword: String = aesEncription(passwordEt.text.toString().trim())
+                        val AesEncryptedPassword: String = Encryption.aesEncription(passwordEt.text.toString().trim())
                         val createdUser: User = User(ConstantValues.DEFAULT_LOGIN_TYPE,usernameEt.text.toString().trim(), emailEt.text.toString().trim(), AesEncryptedPassword, createdUserFirebaseId,ConstantValues.NOT_AVAILABLE ,ConstantValues.DEFAULT_USER_STATUS)
                         userInfoDbRef = db.reference.child("userinfo")
                         userInfoDbRef.child(createdUserFirebaseId).setValue(createdUser)
