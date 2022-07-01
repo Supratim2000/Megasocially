@@ -68,7 +68,7 @@
             android:layout_marginLeft="48dp"
             android:layout_marginTop="32dp"
             android:fontFamily="@font/aleo_bold"
-            android:text="SING UP"
+            android:text="SIGN UP"
             android:textColor="@color/app_blue"
             android:textSize="28sp"
             app:layout_constraintStart_toStartOf="parent"
