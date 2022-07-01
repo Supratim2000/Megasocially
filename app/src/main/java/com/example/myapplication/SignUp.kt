@@ -100,7 +100,7 @@ class SignUp : AppCompatActivity() {
                     if(task.isSuccessful) {
                         Toast.makeText(applicationContext, "user registered successfully, please verify your email", Toast.LENGTH_SHORT).show()
                         val createdUserFirebaseId: String = firebaseAuth.currentUser?.uid ?: "-1"
-                        val AesEncryptedPassword: String = Encryption.aesEncription(passwordEt.text.toString().trim())
+                        val AesEncryptedPassword: String = Encryption.aesEncryption(passwordEt.text.toString().trim())
                         val createdUser: User = User(ConstantValues.DEFAULT_LOGIN_TYPE,usernameEt.text.toString().trim(), emailEt.text.toString().trim(), AesEncryptedPassword, createdUserFirebaseId,ConstantValues.NOT_AVAILABLE ,ConstantValues.DEFAULT_USER_STATUS)
                         userInfoDbRef = db.reference.child("userinfo")
                         userInfoDbRef.child(createdUserFirebaseId).setValue(createdUser)

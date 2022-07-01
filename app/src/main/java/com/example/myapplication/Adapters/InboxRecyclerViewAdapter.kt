@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.ChatActivity
 import com.example.myapplication.Constants.ConstantValues
+import com.example.myapplication.Encryption.Encryption
 import com.example.myapplication.ModelClasses.InboxItemModel
 import com.example.myapplication.ModelClasses.User
 import com.example.myapplication.R
@@ -49,7 +50,7 @@ class InboxRecyclerViewAdapter: RecyclerView.Adapter<InboxViewHolder> {
         Picasso.get().load(currentInboxItem.getInboxChatUserUidProfilePicture()).placeholder(R.drawable.default_user_logo).into(holder.inboxProfilePictureCiv)
         holder.inboxDisplayNameTv.text = currentInboxItem.getInboxChatUserUidName()
         holder.inboxLastMessageTimeTv.text = currentInboxItem.getInboxChatLastMessageTime()
-        holder.inboxLastTextTv.text = "${currentInboxItem.getInboxChatLastMessageFromUidUserName()}: ${currentInboxItem.getInboxChatLastMessage()}"
+        holder.inboxLastTextTv.text = "${currentInboxItem.getInboxChatLastMessageFromUidUserName()}: ${Encryption.aesDecryption(currentInboxItem.getInboxChatLastMessage())}"
         if(currentInboxItem.getInboxChatUnreadCount()>0) {
             holder.inboxUnreadCountTv.text = currentInboxItem.getInboxChatUnreadCount().toString()
             holder.inboxUnreadCountTv.visibility = View.VISIBLE

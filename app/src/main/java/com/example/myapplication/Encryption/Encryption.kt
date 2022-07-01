@@ -7,7 +7,7 @@ import java.security.GeneralSecurityException
 
 class Encryption {
     companion object {
-        fun aesEncription(text: String) : String {
+        fun aesEncryption(text: String) : String {
             var encryptedText: String ="-1"
             if(text != "-1") {
                 try {

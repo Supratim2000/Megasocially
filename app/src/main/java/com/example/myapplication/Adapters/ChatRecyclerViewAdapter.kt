@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Constants.ConstantValues
+import com.example.myapplication.Encryption.Encryption
 import com.example.myapplication.ModelClasses.MessageModel
 import com.example.myapplication.R
 import com.example.myapplication.ViewHolders.ReceivedMessageViewHolder
@@ -101,7 +102,7 @@ class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             FirebaseDatabase.getInstance().reference.child("chats").child(senderRoom).child("messages").child(currentMessage.getMessageId()).setValue(currentMessage).addOnSuccessListener {
                 FirebaseDatabase.getInstance().reference.child("chats").child(receiverRoom).child("messages").child(currentMessage.getMessageId()).setValue(currentMessage).addOnSuccessListener {
-                    Log.v(ConstantValues.LOGCAT_TEST, "Reaction Int value added fro both sender and receiver in Firebase Database")
+                    Log.v(ConstantValues.LOGCAT_TEST, "Reaction Int value added for both sender and receiver in Firebase Database")
                 }
             }
 
@@ -110,7 +111,7 @@ class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if(holder.javaClass == SentMessageViewHolder::class.java) {
             val sentViewHolder: SentMessageViewHolder = holder as SentMessageViewHolder
-            sentViewHolder.sentTextTv.text = currentMessage.getMessageText()
+            sentViewHolder.sentTextTv.text = Encryption.aesDecryption(currentMessage.getMessageText())
             sentViewHolder.sentTimeTv.text = currentMessage.getMessageLocalTime()
             if(currentMessage.getMessageReaction() >=0) {
                 sentViewHolder.sentReactionIv.visibility = View.VISIBLE
@@ -130,7 +131,7 @@ class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         } else {
             val receivedViewHolder: ReceivedMessageViewHolder = holder as ReceivedMessageViewHolder
-            receivedViewHolder.receivedTextTv.text = currentMessage.getMessageText()
+            receivedViewHolder.receivedTextTv.text = Encryption.aesDecryption(currentMessage.getMessageText())
             receivedViewHolder.receivedTimeTv.text = currentMessage.getMessageLocalTime()
             if(currentMessage.getMessageReaction() >=0) {
                 receivedViewHolder.receivedReactionIv.visibility = View.VISIBLE

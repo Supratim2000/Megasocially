@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Adapters.ChatRecyclerViewAdapter
 import com.example.myapplication.Constants.ConstantValues
+import com.example.myapplication.Encryption.Encryption
 import com.example.myapplication.ModelClasses.InboxItemModel
 import com.example.myapplication.ModelClasses.MessageModel
 import com.example.myapplication.ModelClasses.User
@@ -200,7 +201,7 @@ class ChatActivity : AppCompatActivity() {
             if(randomDbKey != null) {
                 val date: Date = Date()
                 val currentTime: String = getCurrentTime(date)
-                val currentMessage: MessageModel = MessageModel(randomDbKey, message, senderUid, receiverUid, ConstantValues.NOT_AVAILABLE_INT, date.time,currentTime , ConstantValues.TEXT_MESSAGE_TYPE)
+                val currentMessage: MessageModel = MessageModel(randomDbKey, Encryption.aesEncryption(message), senderUid, receiverUid, ConstantValues.NOT_AVAILABLE_INT, date.time,currentTime , ConstantValues.TEXT_MESSAGE_TYPE)
 
                 //Adding message item for both sender and receiver side
                 firebaseDb.reference.child("chats").child(senderRoom).child("messages").child(randomDbKey).setValue(currentMessage).addOnSuccessListener {
@@ -211,7 +212,7 @@ class ChatActivity : AppCompatActivity() {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 val loggedInUser: User? = snapshot.getValue(User::class.java)
                                 if(loggedInUser != null) {
-                                    val senderInboxItemModel: InboxItemModel = InboxItemModel(ConstantValues.ZERO_VALUE_INT, receiverUid, intent.getStringExtra(ConstantValues.CHAT_INTENT_USER_NAME)!!, intent.getStringExtra(ConstantValues.CHAT_INTENT_USER_DP)!!, senderUid, loggedInUser.getUserName(),message, date.time, currentTime)
+                                    val senderInboxItemModel: InboxItemModel = InboxItemModel(ConstantValues.ZERO_VALUE_INT, receiverUid, intent.getStringExtra(ConstantValues.CHAT_INTENT_USER_NAME)!!, intent.getStringExtra(ConstantValues.CHAT_INTENT_USER_DP)!!, senderUid, loggedInUser.getUserName(),Encryption.aesEncryption(message), date.time, currentTime)
 
                                     firebaseDb.reference.child("inbox").child(receiverUid).child(senderUid).addListenerForSingleValueEvent(object : ValueEventListener {
                                         override fun onDataChange(snapshot: DataSnapshot) {
@@ -224,7 +225,7 @@ class ChatActivity : AppCompatActivity() {
                                                                 senderInboxItemModel.setInboxChatUnreadCount(snapshot.getValue(InboxItemModel::class.java)!!.getInboxChatUnreadCount())
 
                                                                 firebaseDb.reference.child("inbox").child(senderUid).child(receiverUid).setValue(senderInboxItemModel).addOnSuccessListener {
-                                                                    val receiverInboxItemModel: InboxItemModel = InboxItemModel(unreadCount + 1, senderUid, loggedInUser.getUserName(), loggedInUser.getUserDp(), senderUid, loggedInUser.getUserName(),message, date.time, currentTime)
+                                                                    val receiverInboxItemModel: InboxItemModel = InboxItemModel(unreadCount + 1, senderUid, loggedInUser.getUserName(), loggedInUser.getUserDp(), senderUid, loggedInUser.getUserName(),Encryption.aesEncryption(message), date.time, currentTime)
 
                                                                     firebaseDb.reference.child("inbox").child(receiverUid).child(senderUid).setValue(receiverInboxItemModel).addOnSuccessListener {
                                                                         Log.v(ConstantValues.LOGCAT_TEST, "Both sender and receiver inbox updated successfully")
@@ -243,7 +244,7 @@ class ChatActivity : AppCompatActivity() {
                                                 }
                                             } else {
                                                 firebaseDb.reference.child("inbox").child(senderUid).child(receiverUid).setValue(senderInboxItemModel).addOnSuccessListener {
-                                                    val receiverInboxItemModel: InboxItemModel = InboxItemModel(ConstantValues.ZERO_VALUE_INT, senderUid, loggedInUser.getUserName(), loggedInUser.getUserDp(), senderUid, loggedInUser.getUserName(),message, date.time, currentTime)
+                                                    val receiverInboxItemModel: InboxItemModel = InboxItemModel(ConstantValues.ZERO_VALUE_INT, senderUid, loggedInUser.getUserName(), loggedInUser.getUserDp(), senderUid, loggedInUser.getUserName(),Encryption.aesEncryption(message), date.time, currentTime)
 
                                                     firebaseDb.reference.child("inbox").child(receiverUid).child(senderUid).setValue(receiverInboxItemModel).addOnSuccessListener {
                                                         Log.v(ConstantValues.LOGCAT_TEST, "Both sender and receiver inbox updated successfully")
