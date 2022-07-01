@@ -42,18 +42,40 @@ class ChatActivity : AppCompatActivity() {
         //Setting unread count to zero when ChatActivity destroyed
         if(receiverUid != null) {
             firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
-                .child(receiverUid!!).child("inboxChatUnreadCount").setValue(0)
+                .child(receiverUid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()) {
+                            firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
+                                .child(receiverUid!!).child("inboxChatUnreadCount").setValue(0)
+                        }
+                        finish()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) { }
+                })
+        } else {
+            super.onBackPressed()
         }
-        super.onBackPressed()
     }
 
     override fun onDestroy() {
         //Setting unread count to zero when ChatActivity destroyed
         if(receiverUid != null) {
             firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
-                .child(receiverUid!!).child("inboxChatUnreadCount").setValue(0)
+                .child(receiverUid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()) {
+                            firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
+                                .child(receiverUid!!).child("inboxChatUnreadCount").setValue(0)
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) { }
+                })
+            super.onDestroy()
+        } else {
+            super.onDestroy()
         }
-        super.onDestroy()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +119,17 @@ class ChatActivity : AppCompatActivity() {
 
 
                 //Setting unread count to zero when ChatActivity opened
-                firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid).child(openedUserObject.getUserId()).child("inboxChatUnreadCount").setValue(0)
+                firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
+                    .child(receiverUid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if(snapshot.exists()) {
+                                firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
+                                    .child(receiverUid!!).child("inboxChatUnreadCount").setValue(0)
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) { }
+                    })
 
 
                 setUserDetailsInActivity(openedUserObject)
