@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_blue"
+    android:orientation="vertical"
+    tools:context=".SignIn">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/exit_iv"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/close_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/welcome_back_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aleo_bold"
+            android:text="Welcome Back!"
+            android:textColor="@color/white"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/caption_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/exit_iv"
+            app:layout_constraintVertical_bias="0.74" />
+
+        <TextView
+            android:id="@+id/caption_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aleo_bold"
+            android:text="socialize communicate and have fun!"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/welcome_back_tv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:background="@drawable/login_card_background"
+        android:elevation="36dp">
+
+        <TextView
+            android:id="@+id/login_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/aleo_bold"
+            android:text="LOGIN"
+            android:textColor="@color/app_blue"
+            android:textSize="28sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/login_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="48dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/login_tv">
+
+            <EditText
+                android:id="@+id/email_et"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@drawable/custom_edit_text"
+                android:drawableEnd="@drawable/email_icon_small"
+                android:drawableTint="@color/app_blue"
+                android:elevation="18dp"
+                android:ems="10"
+                android:fontFamily="@font/aleo_light"
+                android:hint="Enter Email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="26dp"
+                android:paddingEnd="26dp"
+                android:textColor="@color/app_blue"
+                android:textCursorDrawable="@null" />
+
+            <EditText
+                android:id="@+id/password_et"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/custom_edit_text"
+                android:drawableEnd="@drawable/lock_icon_small"
+                android:drawableTint="@color/app_blue"
+                android:elevation="18dp"
+                android:ems="10"
+                android:fontFamily="@font/aleo_light"
+                android:hint="Enter Password"
+                android:inputType="textPassword"
+                android:paddingStart="26dp"
+                android:paddingEnd="26dp"
+                android:textColor="@color/app_blue"
+                android:textCursorDrawable="@null" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/login_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:elevation="18dp"
+                    android:fontFamily="@font/aleo_bold"
+                    android:text="Login"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/sign_up_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button"
+                    android:elevation="18dp"
+                    android:fontFamily="@font/aleo_bold"
+                    android:text="Sign up"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/forgot_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/aleo_bold"
+            android:text="Forgot password?"
+            android:textColor="@color/app_blue"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/login_layout"
+            app:layout_constraintTop_toBottomOf="@+id/login_layout" />
+
+        <View
+            android:id="@+id/blank_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginRight="48dp"
+            android:background="@color/lite_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/forgot_tv" />
+
+        <View
+            android:id="@+id/blank_view_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="48dp"
+            android:background="@color/lite_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/blank_view" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginRight="48dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/blank_view_2">
+
+            <Button
+                android:id="@+id/google_login_bt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/custom_button"
+                android:backgroundTint="@color/lite_blue"
+                android:drawableStart="@drawable/google_logo_small"
+                android:elevation="18dp"
+                android:fontFamily="@font/aleo_bold"
+                android:paddingStart="18dp"
+                android:paddingEnd="12dp"
+                android:text="Google"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/facebook_login_bt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/custom_button"
+                android:backgroundTint="@color/lite_blue"
+                android:drawableStart="@drawable/facebook_logo_small"
+                android:elevation="18dp"
+                android:fontFamily="@font/aleo_bold"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="facebook"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

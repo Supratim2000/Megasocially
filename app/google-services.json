@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "306191371922",
+    "project_id": "megasociallyfullapp",
+    "storage_bucket": "megasociallyfullapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306191371922:android:4c6aabccff7ba6e2aaa04b",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306191371922-0v6b0e8gmtlifb1v5k8f0is9594nhhvf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIjSAR9DalsLkff0EP10HbZYYa4PZpk0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306191371922-0v6b0e8gmtlifb1v5k8f0is9594nhhvf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Megasocially</string>
+    <string name="application_name">Megasocially</string>
+    <string name="app_logo">app_logo</string>
+    <string name="powered_by_android_studio">powered by: Android Studio</string>
+    <string name="facebook_app_id">711166980100694</string>
+    <string name="fb_login_protocol_scheme">fb711166980100694</string>
+    <string name="facebook_client_token">9db463e37ccc5b4a0daadb771a6bbe85</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="sign_out">Sign out</string>
+</resources>
