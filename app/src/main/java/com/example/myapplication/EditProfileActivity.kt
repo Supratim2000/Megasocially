@@ -133,7 +133,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun fetchCurrentUserDetails() {
         if(firebaseAuth.currentUser?.uid != null) {
-            firebaseDb.reference.child("userinfo").child(firebaseAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener {
+            firebaseDb.reference.child("userinfo").child(firebaseAuth.currentUser?.uid!!).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val currentUser: User? = snapshot.getValue(User::class.java)
                     if(currentUser != null) {

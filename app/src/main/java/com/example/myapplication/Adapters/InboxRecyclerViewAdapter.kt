@@ -57,9 +57,8 @@ class InboxRecyclerViewAdapter: RecyclerView.Adapter<InboxViewHolder> {
 
 
         holder.itemView.setOnClickListener { view ->
-            //Toast.makeText(context, currentInboxItem.getInboxChatUserUidName(), Toast.LENGTH_SHORT).show()
             if(FirebaseAuth.getInstance().currentUser != null) {
-                FirebaseDatabase.getInstance().reference.child("userinfo").child(currentInboxItem.getInboxChatUserUid()).addValueEventListener(object : ValueEventListener {
+                FirebaseDatabase.getInstance().reference.child("userinfo").child(currentInboxItem.getInboxChatUserUid()).addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val clickedUser: User? = snapshot.getValue(User::class.java)
                         if(clickedUser != null) {

@@ -44,7 +44,7 @@ class ChatActivity : AppCompatActivity() {
             firebaseDb.reference.child("inbox").child(firebaseAuth.currentUser!!.uid)
                 .child(receiverUid!!).child("inboxChatUnreadCount").setValue(0)
         }
-        finish()
+        super.onBackPressed()
     }
 
     override fun onDestroy() {
@@ -175,7 +175,7 @@ class ChatActivity : AppCompatActivity() {
                     firebaseDb.reference.child("chats").child(receiverRoom).child("messages").child(randomDbKey).setValue(currentMessage).addOnSuccessListener {
 
                         //Get logged in user details
-                        firebaseDb.reference.child("userinfo").child(firebaseAuth.currentUser!!.uid).addValueEventListener(object : ValueEventListener {
+                        firebaseDb.reference.child("userinfo").child(firebaseAuth.currentUser!!.uid).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 val loggedInUser: User? = snapshot.getValue(User::class.java)
                                 if(loggedInUser != null) {
