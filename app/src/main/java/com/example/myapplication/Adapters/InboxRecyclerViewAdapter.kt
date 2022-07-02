@@ -56,8 +56,14 @@ class InboxRecyclerViewAdapter: RecyclerView.Adapter<InboxViewHolder> {
             holder.inboxUnreadCountTv.visibility = View.VISIBLE
             holder.inboxLastTextTv.typeface = ResourcesCompat.getFont(context, R.font.aleo_bold)
         } else {
-            holder.inboxUnreadCountTv.visibility = View.INVISIBLE
-            holder.inboxLastTextTv.typeface = ResourcesCompat.getFont(context, R.font.aleo_light)
+            if(currentInboxItem.getInboxItemNewCreated()) {
+                holder.inboxUnreadCountTv.text = "NEW"
+                holder.inboxUnreadCountTv.visibility = View.VISIBLE
+                holder.inboxLastTextTv.typeface = ResourcesCompat.getFont(context, R.font.aleo_bold)
+            } else {
+                holder.inboxUnreadCountTv.visibility = View.INVISIBLE
+                holder.inboxLastTextTv.typeface = ResourcesCompat.getFont(context, R.font.aleo_light)
+            }
         }
 
 

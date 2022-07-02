@@ -10,6 +10,7 @@ class InboxItemModel {
     private var inboxChatLastMessage: String
     private var inboxChatLastMessageTimestamp: Long
     private var inboxChatLastMessageTime: String
+    private var inboxItemNewCreated: Boolean
 
     constructor() {
         this.inboxChatUnreadCount = 0
@@ -21,6 +22,7 @@ class InboxItemModel {
         this.inboxChatLastMessage = "-1"
         this.inboxChatLastMessageTimestamp = -1L
         this.inboxChatLastMessageTime = "-1"
+        this.inboxItemNewCreated = true
     }
 
     constructor(
@@ -32,7 +34,8 @@ class InboxItemModel {
         inboxChatLastMessageFromUidUserName: String,
         inboxChatLastMessage: String,
         inboxChatLastMessageTimestamp: Long,
-        inboxChatLastMessageTime: String
+        inboxChatLastMessageTime: String,
+        inboxItemNewCreated: Boolean
     ) {
         this.inboxChatUnreadCount = inboxChatUnreadCount
         this.inboxChatUserUid = inboxChatUserUid
@@ -43,6 +46,7 @@ class InboxItemModel {
         this.inboxChatLastMessage = inboxChatLastMessage
         this.inboxChatLastMessageTimestamp = inboxChatLastMessageTimestamp
         this.inboxChatLastMessageTime = inboxChatLastMessageTime
+        this.inboxItemNewCreated = inboxItemNewCreated
     }
 
 
@@ -56,6 +60,7 @@ class InboxItemModel {
     public fun getInboxChatLastMessage(): String = this.inboxChatLastMessage
     public fun getInboxChatLastMessageTimestamp(): Long = this.inboxChatLastMessageTimestamp
     public fun getInboxChatLastMessageTime(): String = this.inboxChatLastMessageTime
+    public fun getInboxItemNewCreated(): Boolean = this.inboxItemNewCreated
 
     //setter
     public fun setInboxChatUnreadCount(inboxChatUnreadCount: Int) {
@@ -84,5 +89,8 @@ class InboxItemModel {
     }
     public fun setInboxChatLastMessageTime(inboxChatLastMessageTime: String) {
         this.inboxChatLastMessageTime = inboxChatLastMessageTime
+    }
+    public fun setInboxItemNewCreated(inboxItemNewCreated: Boolean) {
+        this.inboxItemNewCreated = inboxItemNewCreated
     }
 }
