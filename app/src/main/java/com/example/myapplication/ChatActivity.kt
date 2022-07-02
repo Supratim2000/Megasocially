@@ -34,6 +34,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatBackIv: ImageView
     private lateinit var chatProfileIv: de.hdodenhof.circleimageview.CircleImageView
     private lateinit var chatUsernameTv: TextView
+    private lateinit var presenceTv: TextView
     private lateinit var chatRv: RecyclerView
     private lateinit var chatMessageEt: EditText
     private lateinit var chatMessageSendFab: FloatingActionButton
@@ -132,6 +133,26 @@ class ChatActivity : AppCompatActivity() {
                 openedUserUserDp,
                 openedUserUserStatus
             )
+
+            //Show if opened user is offline/online
+            firebaseDb.reference.child("presence").child(openedUserObject.getUserId()).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()) {
+                        val presenceStatus: String? = snapshot.getValue(String::class.java)
+                        if(presenceStatus != null) {
+                            if(presenceStatus.isEmpty()) {
+                                presenceTv.text = ""
+                                presenceTv.visibility = View.GONE
+                            } else {
+                                presenceTv.text = "online"
+                                presenceTv.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
 
             if (firebaseAuth.currentUser != null) {
                 senderUid = firebaseAuth.currentUser!!.uid
@@ -317,6 +338,7 @@ class ChatActivity : AppCompatActivity() {
         chatBackIv = findViewById(R.id.chat_back_iv)
         chatProfileIv = findViewById(R.id.chat_profile_iv)
         chatUsernameTv = findViewById(R.id.chat_username_tv)
+        presenceTv = findViewById(R.id.presence_tv)
         chatRv = findViewById(R.id.chat_rv)
         chatMessageEt = findViewById(R.id.chat_message_et)
         chatMessageSendFab = findViewById(R.id.chat_message_send_fab)
