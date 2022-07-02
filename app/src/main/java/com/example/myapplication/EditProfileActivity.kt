@@ -47,6 +47,20 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("")
+        }
+    }
+
+    override fun onResume() {
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("online")
+        }
+        super.onResume()
+    }
+
     private fun compressAndUploadImageToFirebaseStorage(imageUri: Uri) {
         //Image compression code
         val actualImageBitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)

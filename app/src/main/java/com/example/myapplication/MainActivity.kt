@@ -1,12 +1,14 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.Adapters.MainActivityViewPagerAdapter
@@ -14,7 +16,9 @@ import com.example.myapplication.Constants.ConstantValues
 import com.example.myapplication.Fragments.ChatsFragment
 import com.example.myapplication.Fragments.StatusFragment
 import com.example.myapplication.Fragments.UsersFragment
+import com.example.myapplication.Utility.InternetConnectivityListener
 import com.facebook.AccessToken
+import com.facebook.CallbackManager
 import com.facebook.FacebookSdk
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserInfo
+import com.google.firebase.database.FirebaseDatabase
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
@@ -32,6 +37,33 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainActivityVp: ViewPager
     private lateinit var mainActivityViewPagerAdapter: MainActivityViewPagerAdapter
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var connectivityListener: InternetConnectivityListener
+    private lateinit var callBackManager: CallbackManager
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callBackManager.onActivityResult(requestCode, resultCode, intent)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("")
+        }
+    }
+
+    override fun onResume() {
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("online")
+        }
+        registerNetworkListener()
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        unregisterNetworkListener()
+        super.onDestroy()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,11 +193,30 @@ class MainActivity : AppCompatActivity() {
         mainActivityTL.setupWithViewPager(mainActivityVp)
     }
 
+    fun registerNetworkListener() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(
+                connectivityListener,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            )
+        }
+    }
+
+    fun unregisterNetworkListener() {
+        try {
+            unregisterReceiver(connectivityListener)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
+    }
+
     private fun initVariables() {
         mainActivityTb = findViewById(R.id.main_activity_tb)
         menuIv = findViewById(R.id.menu_iv)
         mainActivityTL = findViewById(R.id.main_activity_tl)
         mainActivityVp = findViewById(R.id.main_activity_vp)
         firebaseAuth = FirebaseAuth.getInstance()
+        connectivityListener = InternetConnectivityListener()
+        callBackManager = CallbackManager.Factory.create()
     }
 }

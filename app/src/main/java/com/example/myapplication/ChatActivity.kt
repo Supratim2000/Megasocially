@@ -2,6 +2,9 @@ package com.example.myapplication
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +18,8 @@ import com.example.myapplication.Encryption.Encryption
 import com.example.myapplication.ModelClasses.InboxItemModel
 import com.example.myapplication.ModelClasses.MessageModel
 import com.example.myapplication.ModelClasses.User
+import com.example.myapplication.Utility.InternetConnectivityListener
+import com.facebook.CallbackManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -77,6 +82,20 @@ class ChatActivity : AppCompatActivity() {
         } else {
             super.onDestroy()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("")
+        }
+    }
+
+    override fun onResume() {
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("online")
+        }
+        super.onResume()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
