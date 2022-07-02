@@ -140,7 +140,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             Log.v(ConstantValues.LOGCAT_TEST,"Signed out from Firebase")
+            makeCurrentUserOffline()
             firebaseAuth.signOut()
+        }
+    }
+
+    private fun makeCurrentUserOffline() {
+        if(FirebaseAuth.getInstance().currentUser != null) {
+            FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("")
         }
     }
 
