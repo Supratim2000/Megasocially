@@ -26,7 +26,7 @@ class Encryption {
                 try {
                     decryptedText = AESCrypt.decrypt(ConstantValues.AES_ENCRIPTION_KEY_FOR_USER_PASSWORD, text)
                 } catch(e: GeneralSecurityException) {
-                    Log.v(ConstantValues.LOGCAT_TEST, "AES Encryption failed")
+                    Log.v(ConstantValues.LOGCAT_TEST, "AES Decryption failed")
                     e.printStackTrace()
                 }
             }
