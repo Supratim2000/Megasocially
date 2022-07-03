@@ -7,6 +7,9 @@ import android.net.ConnectivityManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -134,7 +137,7 @@ class ChatActivity : AppCompatActivity() {
                 openedUserUserStatus
             )
 
-            //Show if opened user is offline/online
+            //Show if opened user is offline/online or if user is typing
             firebaseDb.reference.child("presence").child(openedUserObject.getUserId()).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(snapshot.exists()) {
@@ -143,8 +146,11 @@ class ChatActivity : AppCompatActivity() {
                             if(presenceStatus.isEmpty()) {
                                 presenceTv.text = ""
                                 presenceTv.visibility = View.GONE
-                            } else {
+                            } else if(presenceStatus == "online") {
                                 presenceTv.text = "online"
+                                presenceTv.visibility = View.VISIBLE
+                            } else {
+                                presenceTv.text = "typing..."
                                 presenceTv.visibility = View.VISIBLE
                             }
                         }
@@ -198,6 +204,25 @@ class ChatActivity : AppCompatActivity() {
         chatBackIv.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
                 finish()
+            }
+        })
+
+        //Showing (typing...) status in app and updating (typing...) status in firebase database
+        val handler: Handler = Handler()
+        chatMessageEt.addTextChangedListener(object : TextWatcher {
+            val runnable: Runnable = Runnable {
+                firebaseDb.reference.child("presence").child(firebaseAuth.currentUser!!.uid).setValue("online")
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(firebaseAuth.currentUser != null) {
+                    firebaseDb.reference.child("presence").child(firebaseAuth.currentUser!!.uid).setValue("typing...")
+                    handler.removeCallbacksAndMessages(null)
+                    handler.postDelayed(runnable, ConstantValues.TYPING_STATUS_CHANGE_TIMEOUT)
+                }
             }
         })
     }

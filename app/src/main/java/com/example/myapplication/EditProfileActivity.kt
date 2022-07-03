@@ -61,6 +61,10 @@ class EditProfileActivity : AppCompatActivity() {
         super.onResume()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     private fun compressAndUploadImageToFirebaseStorage(imageUri: Uri) {
         //Image compression code
         val actualImageBitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
