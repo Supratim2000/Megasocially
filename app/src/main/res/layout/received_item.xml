@@ -29,11 +29,12 @@
         android:layout_height="16dp"
         android:contentDescription="REACTION"
         android:src="@drawable/ic_fb_love"
-        app:layout_constraintBottom_toBottomOf="@id/received_text_tv"
-        app:layout_constraintEnd_toEndOf="@+id/received_text_tv"
-        app:layout_constraintStart_toEndOf="@+id/received_text_tv"
-        app:layout_constraintTop_toTopOf="@id/received_text_tv"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/received_time_tv"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/received_text_tv" />
 
     <TextView
         android:id="@+id/received_time_tv"
