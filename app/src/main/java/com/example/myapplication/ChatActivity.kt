@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentFilter
@@ -52,6 +53,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatRvAdapter: ChatRecyclerViewAdapter
     private lateinit var firebaseDb: FirebaseDatabase
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var imageSendingDialogue: ProgressDialog
     private var senderUid: String? = null
     private var receiverUid: String? = null
 
@@ -122,12 +124,119 @@ class ChatActivity : AppCompatActivity() {
     private fun sendSelectedImageMessageToFirebaseStorage(selectedImageUri: Uri) {
         val calendar: Calendar = Calendar.getInstance()
         val sentImageStorageReference: StorageReference = FirebaseStorage.getInstance().reference.child("chat_image").child(calendar.timeInMillis.toString())
+        imageSendingDialogue.show()
         sentImageStorageReference.putFile(selectedImageUri).addOnCompleteListener { task->
+            imageSendingDialogue.dismiss()
             if(task.isSuccessful) {
                 sentImageStorageReference.downloadUrl.addOnSuccessListener { uriInFirebaseStorage->
-
+                    val linkInFirebaseStorage: String = uriInFirebaseStorage.toString()
+                    updateFirebaseRealtimeDatabaseAfterSendingImage(linkInFirebaseStorage)
                 }
             }
+        }
+    }
+
+    private fun updateFirebaseRealtimeDatabaseAfterSendingImage(linkInFirebaseStorage: String) {
+        val senderRoom: String = "$senderUid$receiverUid"
+        val receiverRoom: String = "$receiverUid$senderUid"
+
+        //Creating a random key in firebase realtime database for both sender room and receiver room to have same message id
+        val randomDbKey: String? = firebaseDb.reference.push().key
+
+
+        if(randomDbKey != null && senderUid != null && receiverUid != null) {
+            val date: Date = Date()
+            val currentTime: String = getCurrentTime(date)
+            val currentMessage: MessageModel = MessageModel(randomDbKey, linkInFirebaseStorage,
+                senderUid!!,
+                receiverUid!!, ConstantValues.NOT_AVAILABLE_INT, date.time,currentTime , ConstantValues.IMAGE_MESSAGE_TYPE)
+
+            //Adding message item for both sender and receiver side
+            firebaseDb.reference.child("chats").child(senderRoom).child("messages").child(randomDbKey).setValue(currentMessage).addOnSuccessListener {
+                firebaseDb.reference.child("chats").child(receiverRoom).child("messages").child(randomDbKey).setValue(currentMessage).addOnSuccessListener {
+
+                    //Get logged in user details
+                    firebaseDb.reference.child("userinfo").child(firebaseAuth.currentUser!!.uid).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val loggedInUser: User? = snapshot.getValue(User::class.java)
+                            if(loggedInUser != null) {
+                                val senderInboxItemModel: InboxItemModel = InboxItemModel(ConstantValues.ZERO_VALUE_INT,
+                                    receiverUid!!, intent.getStringExtra(ConstantValues.CHAT_INTENT_USER_NAME)!!, intent.getStringExtra(ConstantValues.CHAT_INTENT_USER_DP)!!,
+                                    senderUid!!, loggedInUser.getUserName(),linkInFirebaseStorage, date.time, currentTime, false)
+
+                                firebaseDb.reference.child("inbox").child(receiverUid!!).child(
+                                    senderUid!!
+                                ).addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        if(snapshot.exists()) {
+                                            val unreadCount: Int? = snapshot.getValue(InboxItemModel::class.java)?.getInboxChatUnreadCount()
+                                            val newlyCreated: Boolean? = snapshot.getValue(InboxItemModel::class.java)?.getInboxItemNewCreated()
+                                            if(unreadCount != null && newlyCreated != null) {
+                                                firebaseDb.reference.child("inbox").child(
+                                                    senderUid!!
+                                                ).child(receiverUid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                                        if(snapshot.getValue(InboxItemModel::class.java) != null) {
+                                                            senderInboxItemModel.setInboxChatUnreadCount(snapshot.getValue(InboxItemModel::class.java)!!.getInboxChatUnreadCount())
+                                                            senderInboxItemModel.setInboxItemNewCreated(false)
+                                                            firebaseDb.reference.child("inbox").child(
+                                                                senderUid!!
+                                                            ).child(receiverUid!!).setValue(senderInboxItemModel).addOnSuccessListener {
+                                                                val receiverInboxItemModel: InboxItemModel = InboxItemModel(unreadCount + 1,
+                                                                    senderUid!!, loggedInUser.getUserName(), loggedInUser.getUserDp(),
+                                                                    senderUid!!, loggedInUser.getUserName(),linkInFirebaseStorage, date.time, currentTime, false)
+
+                                                                firebaseDb.reference.child("inbox").child(
+                                                                    receiverUid!!
+                                                                ).child(senderUid!!).setValue(receiverInboxItemModel).addOnSuccessListener {
+                                                                    Log.v(ConstantValues.LOGCAT_TEST, "Both sender and receiver inbox updated successfully")
+                                                                }
+                                                            }
+                                                        } else {
+                                                            Toast.makeText(this@ChatActivity,  "Something went wrong", Toast.LENGTH_SHORT).show()
+                                                        }
+
+                                                    }
+
+                                                    override fun onCancelled(error: DatabaseError) {}
+                                                })
+                                            } else {
+                                                Toast.makeText(this@ChatActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
+                                            }
+                                        } else {
+                                            firebaseDb.reference.child("inbox").child(
+                                                senderUid!!
+                                            ).child(receiverUid!!).setValue(senderInboxItemModel).addOnSuccessListener {
+                                                val receiverInboxItemModel: InboxItemModel = InboxItemModel(ConstantValues.ZERO_VALUE_INT,
+                                                    senderUid!!, loggedInUser.getUserName(), loggedInUser.getUserDp(),
+                                                    senderUid!!, loggedInUser.getUserName(),linkInFirebaseStorage, date.time, currentTime,true)
+
+                                                firebaseDb.reference.child("inbox").child(
+                                                    receiverUid!!
+                                                ).child(senderUid!!).setValue(receiverInboxItemModel).addOnSuccessListener {
+                                                    Log.v(ConstantValues.LOGCAT_TEST, "Both sender and receiver inbox updated successfully")
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) { }
+                                })
+
+                            } else {
+                                Toast.makeText(this@ChatActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
+                                Log.v(ConstantValues.LOGCAT_TEST, "Logged in fetched user is null")
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) { }
+                    })
+                    Log.v(ConstantValues.LOGCAT_TEST, "Both messages registered successfully in Firebase Database")
+                }
+            }
+        } else {
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+            Log.v(ConstantValues.LOGCAT_TEST, "random generated key from Firebase is null")
         }
     }
 
@@ -190,6 +299,7 @@ class ChatActivity : AppCompatActivity() {
             })
 
             if (firebaseAuth.currentUser != null) {
+                setupImageSendingDialogue()
                 senderUid = firebaseAuth.currentUser!!.uid
                 receiverUid = openedUserUserId
 
@@ -270,6 +380,11 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun setupImageSendingDialogue() {
+        imageSendingDialogue.setMessage("Sending image...")
+        imageSendingDialogue.setCancelable(false)
     }
 
     private fun openImageSelectionOptions() {
@@ -424,5 +539,6 @@ class ChatActivity : AppCompatActivity() {
         chatRvAdapter = ChatRecyclerViewAdapter(this,ConstantValues.NOT_AVAILABLE,ConstantValues.NOT_AVAILABLE)
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDb = FirebaseDatabase.getInstance()
+        imageSendingDialogue = ProgressDialog(this)
     }
 }

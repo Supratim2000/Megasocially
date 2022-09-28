@@ -32,6 +32,7 @@ class ConstantValues {
         val ITEM_SENT_VIEW_TYPE: Int = 1
         val ITEM_RECEIVED_VIEW_TYPE: Int = 2
         val TEXT_MESSAGE_TYPE: String = "TEXT"
+        val IMAGE_MESSAGE_TYPE: String = "IMAGE"
         val TYPING_STATUS_CHANGE_TIMEOUT: Long = 1000L
     }
 }
