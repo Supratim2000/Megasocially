@@ -117,6 +117,7 @@ class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 sentViewHolder.sentImageIv.visibility = View.GONE
                 sentViewHolder.sentImageTimeTv.visibility = View.GONE
                 sentViewHolder.sentImageReactionIv.visibility = View.GONE
+                sentViewHolder.sentImageIvLayout.visibility = View.GONE
                 sentViewHolder.sentTextTv.visibility = View.VISIBLE
                 sentViewHolder.sentReactionIv.visibility = View.INVISIBLE
                 sentViewHolder.sentTimeTv.visibility = View.VISIBLE
@@ -148,6 +149,7 @@ class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 sentViewHolder.sentImageIv.visibility = View.VISIBLE
                 sentViewHolder.sentImageTimeTv.visibility = View.VISIBLE
                 sentViewHolder.sentImageReactionIv.visibility = View.INVISIBLE
+                sentViewHolder.sentImageIvLayout.visibility = View.VISIBLE
                 sentViewHolder.sentTextTv.visibility = View.GONE
                 sentViewHolder.sentReactionIv.visibility = View.GONE
                 sentViewHolder.sentTimeTv.visibility = View.GONE

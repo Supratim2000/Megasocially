@@ -9,17 +9,28 @@
     android:paddingEnd="0dp"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/sent_image_iv"
+
+    <LinearLayout
+        android:id="@+id/sent_image_iv_layout"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:scaleType="centerCrop"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/default_user_logo" />
+        android:background="@color/app_blue"
+        android:padding="4dp">
+
+        <ImageView
+            android:id="@+id/sent_image_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/default_user_logo" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/sent_image_time_tv"
@@ -31,8 +42,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/sent_image_iv"
-        app:layout_constraintTop_toBottomOf="@+id/sent_image_iv"
+        app:layout_constraintStart_toStartOf="@+id/sent_image_iv_layout"
+        app:layout_constraintTop_toBottomOf="@+id/sent_image_iv_layout"
         tools:text="16:00" />
 
     <ImageView
@@ -43,10 +54,10 @@
         android:src="@drawable/ic_fb_love"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/sent_image_iv"
+        app:layout_constraintEnd_toEndOf="@+id/sent_image_iv_layout"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toEndOf="@+id/sent_image_time_tv"
-        app:layout_constraintTop_toBottomOf="@+id/sent_image_iv" />
+        app:layout_constraintTop_toBottomOf="@+id/sent_image_iv_layout" />
 
     <TextView
         android:id="@+id/sent_text_tv"
