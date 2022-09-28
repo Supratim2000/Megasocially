@@ -1,9 +1,12 @@
 package com.example.myapplication
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.Image
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,6 +29,9 @@ import com.facebook.CallbackManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.database.core.Constants
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -42,6 +48,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatMessageEt: EditText
     private lateinit var chatMessageSendFab: FloatingActionButton
     private lateinit var chatAttachmentIv: ImageView
+    private lateinit var chatCameraIv: ImageView
     private lateinit var chatRvAdapter: ChatRecyclerViewAdapter
     private lateinit var firebaseDb: FirebaseDatabase
     private lateinit var firebaseAuth: FirebaseAuth
@@ -100,6 +107,28 @@ class ChatActivity : AppCompatActivity() {
             FirebaseDatabase.getInstance().reference.child("presence").child(FirebaseAuth.getInstance().currentUser!!.uid).setValue("online")
         }
         super.onResume()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == ConstantValues.CHAT_INTENT_IMAGE_SELECT_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            if(data.data != null) {
+                val selectedImageUri: Uri = data.data!!
+                sendSelectedImageMessageToFirebaseStorage(selectedImageUri)
+            }
+        }
+    }
+
+    private fun sendSelectedImageMessageToFirebaseStorage(selectedImageUri: Uri) {
+        val calendar: Calendar = Calendar.getInstance()
+        val sentImageStorageReference: StorageReference = FirebaseStorage.getInstance().reference.child("chat_image").child(calendar.timeInMillis.toString())
+        sentImageStorageReference.putFile(selectedImageUri).addOnCompleteListener { task->
+            if(task.isSuccessful) {
+                sentImageStorageReference.downloadUrl.addOnSuccessListener { uriInFirebaseStorage->
+
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -190,6 +219,22 @@ class ChatActivity : AppCompatActivity() {
             Log.v(ConstantValues.LOGCAT_TEST, "Some field got from intent is null")
         }
 
+        chatAttachmentIv.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                if(senderUid != null && receiverUid != null) {
+                    openImageSelectionOptions()
+                } else {
+                    Toast.makeText(this@ChatActivity, "Something went wrong", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        chatCameraIv.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                TODO("Not yet implemented")
+            }
+        })
+
         chatMessageSendFab.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 if(isMessageNotEmpty() && senderUid != null && receiverUid != null) {
@@ -225,6 +270,13 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun openImageSelectionOptions() {
+        val imageSelectIntent = Intent()
+        imageSelectIntent.action = Intent.ACTION_GET_CONTENT
+        imageSelectIntent.type = "image/*"
+        startActivityForResult(imageSelectIntent, ConstantValues.CHAT_INTENT_IMAGE_SELECT_REQUEST_CODE)
     }
 
     private fun fetchChatsFromFirebase(senderUid: String, receiverUid: String) {
@@ -368,6 +420,7 @@ class ChatActivity : AppCompatActivity() {
         chatMessageEt = findViewById(R.id.chat_message_et)
         chatMessageSendFab = findViewById(R.id.chat_message_send_fab)
         chatAttachmentIv = findViewById(R.id.chat_attachment_iv)
+        chatCameraIv = findViewById(R.id.chat_camera_iv)
         chatRvAdapter = ChatRecyclerViewAdapter(this,ConstantValues.NOT_AVAILABLE,ConstantValues.NOT_AVAILABLE)
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseDb = FirebaseDatabase.getInstance()

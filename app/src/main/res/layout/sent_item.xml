@@ -9,6 +9,45 @@
     android:paddingEnd="0dp"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/sent_image_iv"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/default_user_logo" />
+
+    <TextView
+        android:id="@+id/sent_image_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/aleo_light"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/sent_image_iv"
+        app:layout_constraintTop_toBottomOf="@+id/sent_image_iv"
+        tools:text="16:00" />
+
+    <ImageView
+        android:id="@+id/sent_image_reaction_iv"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:contentDescription="REACTION"
+        android:src="@drawable/ic_fb_love"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/sent_image_iv"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toEndOf="@+id/sent_image_time_tv"
+        app:layout_constraintTop_toBottomOf="@+id/sent_image_iv" />
+
     <TextView
         android:id="@+id/sent_text_tv"
         android:layout_width="wrap_content"

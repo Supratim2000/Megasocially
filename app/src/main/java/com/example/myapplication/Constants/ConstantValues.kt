@@ -28,6 +28,7 @@ class ConstantValues {
         val CHAT_INTENT_USER_ID: String = "com.example.myapplication.user_id"
         val CHAT_INTENT_USER_DP: String = "com.example.myapplication.user_dp"
         val CHAT_INTENT_USER_STATUS: String = "com.example.myapplication.user_status"
+        val CHAT_INTENT_IMAGE_SELECT_REQUEST_CODE: Int = 102
         val ITEM_SENT_VIEW_TYPE: Int = 1
         val ITEM_RECEIVED_VIEW_TYPE: Int = 2
         val TEXT_MESSAGE_TYPE: String = "TEXT"
