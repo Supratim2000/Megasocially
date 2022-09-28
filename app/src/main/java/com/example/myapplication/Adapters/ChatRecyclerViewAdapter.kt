@@ -21,6 +21,7 @@ import com.github.pgreze.reactions.dsl.reactionConfig
 import com.github.pgreze.reactions.dsl.reactions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 
 
 class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -111,43 +112,106 @@ class ChatRecyclerViewAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if(holder.javaClass == SentMessageViewHolder::class.java) {
             val sentViewHolder: SentMessageViewHolder = holder as SentMessageViewHolder
-            sentViewHolder.sentTextTv.text = Encryption.aesDecryption(currentMessage.getMessageText())
-            sentViewHolder.sentTimeTv.text = currentMessage.getMessageLocalTime()
-            if(currentMessage.getMessageReaction() >=0) {
-                sentViewHolder.sentReactionIv.visibility = View.VISIBLE
-                sentViewHolder.sentReactionIv.setImageResource(reactionList[currentMessage.getMessageReaction()])
-            } else {
-                sentViewHolder.sentReactionIv.visibility = View.INVISIBLE
-            }
 
-            sentViewHolder.sentTextTv.setOnTouchListener(object : View.OnTouchListener {
-                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    if(v != null && event != null) {
-                        popup.onTouch(v,event)
-                    }
-                    return false
+            if(currentMessage.getMessageType() == ConstantValues.TEXT_MESSAGE_TYPE) {
+                sentViewHolder.sentImageIv.visibility = View.GONE
+                sentViewHolder.sentImageTimeTv.visibility = View.GONE
+                sentViewHolder.sentImageReactionIv.visibility = View.GONE
+                sentViewHolder.sentTextTv.visibility = View.VISIBLE
+                sentViewHolder.sentReactionIv.visibility = View.INVISIBLE
+                sentViewHolder.sentTimeTv.visibility = View.VISIBLE
+
+
+
+                sentViewHolder.sentTextTv.text =
+                    Encryption.aesDecryption(currentMessage.getMessageText())
+                sentViewHolder.sentTimeTv.text = currentMessage.getMessageLocalTime()
+                if (currentMessage.getMessageReaction() >= 0) {
+                    sentViewHolder.sentReactionIv.visibility = View.VISIBLE
+                    sentViewHolder.sentReactionIv.setImageResource(reactionList[currentMessage.getMessageReaction()])
+                } else {
+                    sentViewHolder.sentReactionIv.visibility = View.INVISIBLE
                 }
-            })
+
+                sentViewHolder.sentTextTv.setOnTouchListener(object : View.OnTouchListener {
+                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                        if (v != null && event != null) {
+                            popup.onTouch(v, event)
+                        }
+                        return false
+                    }
+                })
+            } else if(currentMessage.getMessageType() == ConstantValues.IMAGE_MESSAGE_TYPE) {
+
+
+
+                sentViewHolder.sentImageIv.visibility = View.VISIBLE
+                sentViewHolder.sentImageTimeTv.visibility = View.VISIBLE
+                sentViewHolder.sentImageReactionIv.visibility = View.INVISIBLE
+                sentViewHolder.sentTextTv.visibility = View.GONE
+                sentViewHolder.sentReactionIv.visibility = View.GONE
+                sentViewHolder.sentTimeTv.visibility = View.GONE
+
+                Picasso.get().load(currentMessage.getMessageText()).into(sentViewHolder.sentImageIv)
+                sentViewHolder.sentImageTimeTv.text = currentMessage.getMessageLocalTime()
+
+            }
 
         } else {
-            val receivedViewHolder: ReceivedMessageViewHolder = holder as ReceivedMessageViewHolder
-            receivedViewHolder.receivedTextTv.text = Encryption.aesDecryption(currentMessage.getMessageText())
-            receivedViewHolder.receivedTimeTv.text = currentMessage.getMessageLocalTime()
-            if(currentMessage.getMessageReaction() >=0) {
-                receivedViewHolder.receivedReactionIv.visibility = View.VISIBLE
-                receivedViewHolder.receivedReactionIv.setImageResource(reactionList[currentMessage.getMessageReaction()])
-            } else {
-                receivedViewHolder.receivedReactionIv.visibility = View.INVISIBLE
-            }
 
-            receivedViewHolder.receivedTextTv.setOnTouchListener(object : View.OnTouchListener {
-                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                    if(v != null && event != null) {
-                        popup.onTouch(v,event)
-                    }
-                    return false
+            val receivedViewHolder: ReceivedMessageViewHolder =
+                holder as ReceivedMessageViewHolder
+
+            if(currentMessage.getMessageType() == ConstantValues.TEXT_MESSAGE_TYPE) {
+
+
+
+
+
+
+
+
+                receivedViewHolder.receivedImageIv.visibility = View.GONE
+                receivedViewHolder.receivedImageTimeTv.visibility = View.GONE
+                receivedViewHolder.receivedImageReactionIv.visibility = View.GONE
+                receivedViewHolder.receivedTextTv.visibility = View.VISIBLE
+                receivedViewHolder.receivedReactionIv.visibility = View.INVISIBLE
+                receivedViewHolder.receivedTimeTv.visibility = View.VISIBLE
+
+
+
+
+
+                receivedViewHolder.receivedTextTv.text =
+                    Encryption.aesDecryption(currentMessage.getMessageText())
+                receivedViewHolder.receivedTimeTv.text = currentMessage.getMessageLocalTime()
+                if (currentMessage.getMessageReaction() >= 0) {
+                    receivedViewHolder.receivedReactionIv.visibility = View.VISIBLE
+                    receivedViewHolder.receivedReactionIv.setImageResource(reactionList[currentMessage.getMessageReaction()])
+                } else {
+                    receivedViewHolder.receivedReactionIv.visibility = View.INVISIBLE
                 }
-            })
+
+                receivedViewHolder.receivedTextTv.setOnTouchListener(object : View.OnTouchListener {
+                    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                        if (v != null && event != null) {
+                            popup.onTouch(v, event)
+                        }
+                        return false
+                    }
+                })
+            } else if(currentMessage.getMessageType() == ConstantValues.IMAGE_MESSAGE_TYPE) {
+                receivedViewHolder.receivedImageIv.visibility = View.VISIBLE
+                receivedViewHolder.receivedImageTimeTv.visibility = View.VISIBLE
+                receivedViewHolder.receivedImageReactionIv.visibility = View.INVISIBLE
+                receivedViewHolder.receivedTextTv.visibility = View.GONE
+                receivedViewHolder.receivedReactionIv.visibility = View.GONE
+                receivedViewHolder.receivedTimeTv.visibility = View.GONE
+
+                Picasso.get().load(currentMessage.getMessageText()).into(receivedViewHolder.receivedImageIv)
+                receivedViewHolder.receivedImageTimeTv.text = currentMessage.getMessageLocalTime()
+
+            }
         }
     }
 

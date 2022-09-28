@@ -50,7 +50,18 @@ class InboxRecyclerViewAdapter: RecyclerView.Adapter<InboxViewHolder> {
         Picasso.get().load(currentInboxItem.getInboxChatUserUidProfilePicture()).placeholder(R.drawable.default_user_logo).into(holder.inboxProfilePictureCiv)
         holder.inboxDisplayNameTv.text = currentInboxItem.getInboxChatUserUidName()
         holder.inboxLastMessageTimeTv.text = currentInboxItem.getInboxChatLastMessageTime()
-        holder.inboxLastTextTv.text = "${currentInboxItem.getInboxChatLastMessageFromUidUserName()}: ${Encryption.aesDecryption(currentInboxItem.getInboxChatLastMessage())}"
+
+        if(!currentInboxItem.getInboxChatLastMessage().contains("https://firebasestorage.googleapis.com")) {
+
+            holder.inboxLastTextTv.text =
+                "${currentInboxItem.getInboxChatLastMessageFromUidUserName()}: ${
+                    Encryption.aesDecryption(currentInboxItem.getInboxChatLastMessage())
+                }"
+        } else {
+            holder.inboxLastTextTv.text =
+                "${currentInboxItem.getInboxChatLastMessageFromUidUserName()}: IMAGE"
+        }
+
         if(currentInboxItem.getInboxChatUnreadCount()>0) {
             holder.inboxUnreadCountTv.text = currentInboxItem.getInboxChatUnreadCount().toString()
             holder.inboxUnreadCountTv.visibility = View.VISIBLE
